@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping("/")
     public ResponseEntity<String> getHomePage() {
-        return ResponseEntity.ok().body("Xin chào Đỗ Văn An");
+        return ResponseEntity.ok().body("Xin chào Đỗ Văn Annn");
     }
 }
