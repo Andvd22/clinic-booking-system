@@ -9,29 +9,29 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-// @Component("userDetailsService")
-// public class UserDetailsCustom implements UserDetailsService {
+import com.mediclinic.appointment_scheduler.service.UserService;
 
-// private final UserService userService;
+@Component("userDetailsService")
+public class UserDetailsCustom implements UserDetailsService {
 
-// public UserDetailsCustom(UserService userService) {
-// this.userService = userService;
-// }
+    private final UserService userService;
 
-// @Override
-// public UserDetails loadUserByUsername(String username) throws
-// UsernameNotFoundException {
-// // TODO Auto-generated method stub
-// vn.hoidanit.jobhunter.domain.User user =
-// this.userService.handleGetUserByUsername(username);
-// if (user == null) {
-// throw new UsernameNotFoundException("Username/password không hợp lệ");
-// }
+    public UserDetailsCustom(UserService userService) {
+        this.userService = userService;
+    }
 
-// return new User(
-// user.getEmail(),
-// user.getPassword(),
-// Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-// }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // TODO Auto-generated method stub
+        com.mediclinic.appointment_scheduler.domain.User user = this.userService.handleGetUserByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Username/password không hợp lệ");
+        }
 
-// }
+        return new User(
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+}
