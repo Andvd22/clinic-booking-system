@@ -1,4 +1,4 @@
-package com.mediclinic.appointment_scheduler.domain;
+package com.mediclinic.appointment_scheduler.domain.response;
 
 public class RestResponse<T> {
     private int statusCode;

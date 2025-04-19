@@ -1,7 +1,7 @@
 package com.mediclinic.appointment_scheduler.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mediclinic.appointment_scheduler.domain.RestResponse;
+import com.mediclinic.appointment_scheduler.domain.response.RestResponse;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

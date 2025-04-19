@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
-import com.mediclinic.appointment_scheduler.domain.ResLoginDTO;
+import com.mediclinic.appointment_scheduler.domain.response.ResLoginDTO;
 import com.nimbusds.jose.util.Base64;
 
 @Service

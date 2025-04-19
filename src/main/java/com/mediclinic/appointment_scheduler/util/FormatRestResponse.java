@@ -8,7 +8,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import com.mediclinic.appointment_scheduler.domain.RestResponse;
+import com.mediclinic.appointment_scheduler.domain.response.RestResponse;
 import com.mediclinic.appointment_scheduler.util.annotation.ApiMessage;
 
 import jakarta.servlet.http.HttpServletResponse;
