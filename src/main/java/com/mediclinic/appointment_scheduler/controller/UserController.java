@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mediclinic.appointment_scheduler.domain.User;
+import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.service.UserService;
 import com.mediclinic.appointment_scheduler.util.annotation.ApiMessage;
 import com.mediclinic.appointment_scheduler.util.error.IdInvalidException;
@@ -79,8 +80,8 @@ public class UserController {
 
     @GetMapping("/users")
     @ApiMessage("fetch all users")
-    public ResponseEntity<List<User>> getAllUser(Pageable pageable, @Filter Specification<User> spec) {
-        List<User> bbusers = this.userService.fetchAllUser(pageable, spec);
+    public ResponseEntity<ResPaginationDTO> getAllUser(Pageable pageable, @Filter Specification<User> spec) {
+        ResPaginationDTO bbusers = this.userService.fetchAllUser(pageable, spec);
         return ResponseEntity.status(HttpStatus.OK).body(bbusers);
     }
 

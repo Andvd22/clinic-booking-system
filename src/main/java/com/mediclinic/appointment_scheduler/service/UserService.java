@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.mediclinic.appointment_scheduler.domain.User;
+import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.repository.UserRepository;
 
 @Service
@@ -45,9 +46,17 @@ public class UserService {
         return this.userRepository.findById(id).orElse(null);
     }
 
-    public List<User> fetchAllUser(Pageable pageable, Specification<User> spec) {
+    public ResPaginationDTO fetchAllUser(Pageable pageable, Specification<User> spec) {
+        ResPaginationDTO res = new ResPaginationDTO();
+        ResPaginationDTO.Meta meta = new ResPaginationDTO.Meta();
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
-        return pageUser.getContent();
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPages(pageUser.getTotalPages());
+        meta.setTotal(pageUser.getTotalElements());
+        res.setMeta(meta);
+        res.setResult(pageUser.getContent());
+        return res;
     }
 
     public User updateUser(User user) {
