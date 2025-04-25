@@ -55,9 +55,9 @@ public class Doctor {
     // @JoinColumn(name = "specialty_id")
     // private Specialty specialty;
 
-    // @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    // @JsonIgnore
-    // private List<Schedule> schedules;
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Schedule> schedules;
 
     // @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     // @JsonIgnore
