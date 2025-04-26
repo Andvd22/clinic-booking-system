@@ -1,5 +1,8 @@
 package com.mediclinic.appointment_scheduler.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -17,6 +20,8 @@ public interface ScheduleService {
     ResScheduleDTO fetchScheduleById(Long id);
 
     ResPaginationDTO fetchAllSchedules(Pageable pageable, Specification<Schedule> spec);
+
+    List<ResScheduleDTO> getSchedulesByDoctorAndDate(Long doctorId, LocalDate workDate);
 
     boolean isExistsTimeSlotBuildQuery(Schedule schedule);
 }

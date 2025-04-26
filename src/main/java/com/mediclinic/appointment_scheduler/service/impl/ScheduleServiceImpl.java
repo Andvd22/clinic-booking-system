@@ -1,16 +1,20 @@
 package com.mediclinic.appointment_scheduler.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.mediclinic.appointment_scheduler.domain.Doctor;
 import com.mediclinic.appointment_scheduler.domain.Schedule;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.domain.response.schedule.ResScheduleDTO;
+import com.mediclinic.appointment_scheduler.repository.DoctorRepository;
 import com.mediclinic.appointment_scheduler.repository.ScheduleRepository;
 import com.mediclinic.appointment_scheduler.service.ScheduleService;
 import com.mediclinic.appointment_scheduler.util.error.IdInvalidException;
@@ -20,9 +24,11 @@ import com.mediclinic.appointment_scheduler.util.error.ResourceNotFoundException
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final DoctorRepository doctorRepository;
 
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, DoctorRepository doctorRepository) {
         this.scheduleRepository = scheduleRepository;
+        this.doctorRepository = doctorRepository;
     }
 
     @Override
@@ -89,6 +95,24 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .collect(Collectors.toList());
         res.setResult(resScheduleDTOs);
         return res;
+    }
+
+    @Override
+    public List<ResScheduleDTO> getSchedulesByDoctorAndDate(Long doctorId, LocalDate workDate) {
+        if (doctorId < 1) {
+            throw new IdInvalidException("Id bác sĩ không hợp lệ");
+        }
+        if (workDate == null) {
+            throw new IdInvalidException("Ngày khám không được để trống");
+        }
+
+        doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tồn tại bác sĩ này"));
+
+        List<Schedule> schedules = scheduleRepository.findSchedulesByDoctorAndDate(doctorId, workDate);
+        return schedules.stream()
+                .map(ResScheduleDTO::mapEntityScheduleToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

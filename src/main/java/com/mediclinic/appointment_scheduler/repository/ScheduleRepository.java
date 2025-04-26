@@ -15,4 +15,9 @@ import com.mediclinic.appointment_scheduler.domain.Schedule;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSpecificationExecutor<Schedule> {
     @Query("SELECT s FROM Schedule s WHERE s.doctor.id = :doctorId AND s.workDate = :workDate AND s.status != 'CANCELLED'")
     List<Schedule> findAllSchedulesByQuery(@Param("doctorId") Long doctorId, @Param("workDate") LocalDate workDate);
+
+    @Query("SELECT s FROM Schedule s WHERE s.doctor.id = :doctorId AND s.workDate = :workDate  ORDER BY s.timeSlot ASC")
+    List<Schedule> findSchedulesByDoctorAndDate(
+            @Param("doctorId") Long doctorId,
+            @Param("workDate") LocalDate workDate);
 }
