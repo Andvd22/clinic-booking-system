@@ -17,15 +17,24 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ResScheduleDTO {
     private Long id;
-    private ResDoctorDTO doctor;
+    private ScheduleDoctor doctor;
     private LocalDate workDate;
     private String timeSlot;
     private ScheduleStatus status;
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ScheduleDoctor {
+        Long id;
+        String name;
+    }
+
     public static ResScheduleDTO mapEntityScheduleToDTO(Schedule schedule) {
         return new ResScheduleDTO(
                 schedule.getId(),
-                ResDoctorDTO.mapEntityDoctorToDTO(schedule.getDoctor()),
+                new ScheduleDoctor(schedule.getDoctor().getId(), schedule.getDoctor().getFullName()),
                 schedule.getWorkDate(),
                 schedule.getTimeSlot(),
                 schedule.getStatus());

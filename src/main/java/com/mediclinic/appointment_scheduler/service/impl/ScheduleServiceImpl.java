@@ -39,6 +39,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             else
                 throw new ResourceAlreadyExistsException("Lịch đã tồn tại");
         }
+        schedulePM.setDoctor(this.doctorRepository.findById(schedulePM.getDoctor().getId()).orElse(null));
         Schedule scheduleDB = this.scheduleRepository.save(schedulePM);
         return ResScheduleDTO.mapEntityScheduleToDTO(scheduleDB);
     }
@@ -120,7 +121,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         res.setMeta(meta);
 
         res.setResult(
-                pageSchedules.getContent().stream().map(schedule -> ResScheduleDTO.mapEntityScheduleToDTO(schedule)));
+                pageSchedules.getContent().stream()
+                        .map(schedule -> ResScheduleDTO.mapEntityScheduleToDTO(schedule))
+                        .collect(Collectors.toList()));
         return res;
 
     }

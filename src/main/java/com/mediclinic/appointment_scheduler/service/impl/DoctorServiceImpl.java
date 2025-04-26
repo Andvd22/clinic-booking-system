@@ -13,6 +13,7 @@ import com.mediclinic.appointment_scheduler.domain.Doctor;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.domain.response.doctor.ResDoctorDTO;
 import com.mediclinic.appointment_scheduler.repository.DoctorRepository;
+import com.mediclinic.appointment_scheduler.repository.SpecialtyRepository;
 import com.mediclinic.appointment_scheduler.service.DoctorService;
 import com.mediclinic.appointment_scheduler.util.error.IdInvalidException;
 import com.mediclinic.appointment_scheduler.util.error.ResourceAlreadyExistsException;
@@ -21,9 +22,11 @@ import com.mediclinic.appointment_scheduler.util.error.ResourceNotFoundException
 @Service
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
+    private final SpecialtyRepository specialtyRepository;
 
-    public DoctorServiceImpl(DoctorRepository doctorRepository) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, SpecialtyRepository specialtyRepository) {
         this.doctorRepository = doctorRepository;
+        this.specialtyRepository = specialtyRepository;
     }
 
     @Override
@@ -32,6 +35,9 @@ public class DoctorServiceImpl implements DoctorService {
             throw new ResourceAlreadyExistsException("Email đã tồn tại");
         }
         doctorPM.setActive(true);
+        if (doctorPM.getSpecialty() != null) {
+            doctorPM.setSpecialty(this.specialtyRepository.findById(doctorPM.getSpecialty().getId()).orElse(null));
+        }
         Doctor doctorDB = this.doctorRepository.save(doctorPM);
         return ResDoctorDTO.mapEntityDoctorToDTO(doctorDB);
     }
@@ -48,6 +54,9 @@ public class DoctorServiceImpl implements DoctorService {
         doctorDB.setPhone(doctorPM.getPhone());
         doctorDB.setDescription(doctorPM.getDescription());
         doctorDB.setImageUrl(doctorPM.getImageUrl());
+        if (doctorPM.getSpecialty() != null) {
+            doctorDB.setSpecialty(this.specialtyRepository.findById(doctorPM.getSpecialty().getId()).orElse(null));
+        }
         this.doctorRepository.save(doctorDB);
         return ResDoctorDTO.mapEntityDoctorToDTO(doctorDB);
     }

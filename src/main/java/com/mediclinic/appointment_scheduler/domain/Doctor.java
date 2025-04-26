@@ -51,9 +51,9 @@ public class Doctor {
     private String imageUrl;
     private boolean active = true;
 
-    // @ManyToOne
-    // @JoinColumn(name = "specialty_id")
-    // private Specialty specialty;
+    @ManyToOne
+    @JoinColumn(name = "specialty_id")
+    private Specialty specialty;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     @JsonIgnore
