@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mediclinic.appointment_scheduler.domain.Schedule;
+import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.domain.response.schedule.ResScheduleDTO;
 import com.mediclinic.appointment_scheduler.service.ScheduleService;
 import com.mediclinic.appointment_scheduler.util.annotation.ApiMessage;
@@ -65,10 +66,11 @@ public class ScheduleController {
     }
 
     @GetMapping("/doctor-schedule")
-    public ResponseEntity<List<ResScheduleDTO>> getSchedulesByDoctorAndDate(
+    public ResponseEntity<?> getSchedulesByDoctorAndDate(
             @RequestParam Long doctorId,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate workDate) {
-        List<ResScheduleDTO> schedules = scheduleService.getSchedulesByDoctorAndDate(doctorId, workDate);
-        return ResponseEntity.ok(schedules);
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate workDate,
+            Pageable pageable) {
+        ResPaginationDTO res = this.scheduleService.fetchSchedulesByDoctorAndDate(doctorId, workDate, pageable);
+        return ResponseEntity.ok(res);
     }
 }

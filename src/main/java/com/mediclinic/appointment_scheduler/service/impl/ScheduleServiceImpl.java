@@ -98,21 +98,31 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ResScheduleDTO> getSchedulesByDoctorAndDate(Long doctorId, LocalDate workDate) {
+    public ResPaginationDTO fetchSchedulesByDoctorAndDate(Long doctorId, LocalDate workDate, Pageable pageable) {
         if (doctorId < 1) {
             throw new IdInvalidException("Id bác sĩ không hợp lệ");
         }
-        if (workDate == null) {
+        if (workDate == null || workDate.equals("")) {
             throw new IdInvalidException("Ngày khám không được để trống");
         }
 
-        doctorRepository.findById(doctorId)
+        this.doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tồn tại bác sĩ này"));
 
-        List<Schedule> schedules = scheduleRepository.findSchedulesByDoctorAndDate(doctorId, workDate);
-        return schedules.stream()
-                .map(ResScheduleDTO::mapEntityScheduleToDTO)
-                .collect(Collectors.toList());
+        Page<Schedule> pageSchedules = this.scheduleRepository.findSchedulesByDoctorAndDate(doctorId, workDate,
+                pageable);
+        ResPaginationDTO res = new ResPaginationDTO();
+        ResPaginationDTO.Meta meta = new ResPaginationDTO.Meta();
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize((pageable.getPageSize()));
+        meta.setPages(pageSchedules.getTotalPages());
+        meta.setTotal((pageSchedules.getTotalElements()));
+        res.setMeta(meta);
+
+        res.setResult(
+                pageSchedules.getContent().stream().map(schedule -> ResScheduleDTO.mapEntityScheduleToDTO(schedule)));
+        return res;
+
     }
 
     @Override

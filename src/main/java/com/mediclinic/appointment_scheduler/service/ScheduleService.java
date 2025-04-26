@@ -21,7 +21,7 @@ public interface ScheduleService {
 
     ResPaginationDTO fetchAllSchedules(Pageable pageable, Specification<Schedule> spec);
 
-    List<ResScheduleDTO> getSchedulesByDoctorAndDate(Long doctorId, LocalDate workDate);
+    ResPaginationDTO fetchSchedulesByDoctorAndDate(Long doctorId, LocalDate workDate, Pageable pageable);
 
     boolean isExistsTimeSlotBuildQuery(Schedule schedule);
 }
