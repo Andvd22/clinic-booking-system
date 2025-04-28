@@ -33,12 +33,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ResScheduleDTO createSchedule(Schedule schedulePM) {
-        if (!this.scheduleRepository.findAll().isEmpty()) {
-            if (!this.isExistsTimeSlotBuildQuery(schedulePM))
-                schedulePM.setTimeSlot(schedulePM.getTimeSlot());
-            else
-                throw new ResourceAlreadyExistsException("Lịch đã tồn tại");
-        }
+        if (!this.isExistsTimeSlotBuildQuery(schedulePM))
+            schedulePM.setTimeSlot(schedulePM.getTimeSlot());
+        else
+            throw new ResourceAlreadyExistsException("Lịch đã tồn tại");
+
         schedulePM.setDoctor(this.doctorRepository.findById(schedulePM.getDoctor().getId()).orElse(null));
         Schedule scheduleDB = this.scheduleRepository.save(schedulePM);
         return ResScheduleDTO.mapEntityScheduleToDTO(scheduleDB);
@@ -136,11 +135,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> listDB = this.scheduleRepository.findAllSchedulesByQuery(schedulePM.getDoctor().getId(),
                 schedulePM.getWorkDate());
         for (Schedule s : listDB) {
-            if (schedulePM.getId() == s.getId())
+            if (schedulePM.getId() == s.getId()) {
                 continue;
+            }
+
             int oldStartTime = this.handleChangeHoursToMinutes(s.getTimeSlot().trim().split("-")[0]);
             int oldEndTime = this.handleChangeHoursToMinutes(s.getTimeSlot().trim().split("-")[1]);
-            if (!((newStartTime >= oldEndTime) || (newEndTime <= oldStartTime)))
+            if (((newStartTime < oldEndTime) && (newEndTime > oldStartTime)))
                 return true;
         }
         return false;

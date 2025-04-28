@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.mediclinic.appointment_scheduler.domain.Schedule;
 import com.mediclinic.appointment_scheduler.domain.response.doctor.ResDoctorDTO;
-import com.mediclinic.appointment_scheduler.util.constant.ScheduleStatus;
+import com.mediclinic.appointment_scheduler.util.constant.ScheduleStatusEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class ResScheduleDTO {
     private ScheduleDoctor doctor;
     private LocalDate workDate;
     private String timeSlot;
-    private ScheduleStatus status;
+    private ScheduleStatusEnum status;
 
     @Getter
     @Setter

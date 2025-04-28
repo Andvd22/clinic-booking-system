@@ -21,7 +21,16 @@ public class ResSpecialtyDTO {
     private Long id;
     private String name;
     private String description;
-    private List<ResDoctorDTO> doctors;
+    private List<SpecialtyDoctor> doctors;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SpecialtyDoctor {
+        private Long id;
+        private String name;
+    }
 
     public static ResSpecialtyDTO mapEntitySpecialtyToDTO(Specialty s) {
         return new ResSpecialtyDTO(
@@ -29,7 +38,8 @@ public class ResSpecialtyDTO {
                 s.getName(),
                 s.getDescription(),
                 s.getDoctors() != null ? s.getDoctors().stream()
-                        .map(doctor -> ResDoctorDTO.mapEntityDoctorToDTO(doctor)).collect(Collectors.toList())
+                        .map(doctor -> new SpecialtyDoctor(doctor.getId(), doctor.getFullName()))
+                        .collect(Collectors.toList())
                         : new ArrayList<>()
 
         );

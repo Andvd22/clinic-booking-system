@@ -1,6 +1,6 @@
 package com.mediclinic.appointment_scheduler.util.constant;
 
-public enum ScheduleStatus {
+public enum ScheduleStatusEnum {
     AVAILABLE,
     BOOKED,
     CANCELLED

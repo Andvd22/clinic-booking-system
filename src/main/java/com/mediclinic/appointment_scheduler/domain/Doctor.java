@@ -59,9 +59,9 @@ public class Doctor {
     @JsonIgnore
     private List<Schedule> schedules;
 
-    // @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    // @JsonIgnore
-    // private List<Appointment> appointments;
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Appointment> appointments;
 
     private Instant createdAt;
     private Instant updatedAt;
