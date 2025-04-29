@@ -20,8 +20,8 @@ public class EmailController {
     @GetMapping("/email")
     @ApiMessage("Gửi email")
     public ResponseEntity<?> sendEmail() {
+        // Gọi trực tiếp service để gửi email
         emailService.sendEmail();
         return ResponseEntity.ok("Đặt lịch thành công, vui lòng kiểm tra hộp thư.");
     }
-
 }
