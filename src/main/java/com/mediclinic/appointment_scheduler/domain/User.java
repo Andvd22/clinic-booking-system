@@ -60,6 +60,10 @@ public class User {
     @JsonIgnore
     private List<Appointment> appointments;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
