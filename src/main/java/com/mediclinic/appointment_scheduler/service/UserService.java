@@ -2,6 +2,8 @@ package com.mediclinic.appointment_scheduler.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,14 +12,19 @@ import org.springframework.stereotype.Service;
 
 import com.mediclinic.appointment_scheduler.domain.User;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
+import com.mediclinic.appointment_scheduler.domain.response.user.ResUserDTO;
+import com.mediclinic.appointment_scheduler.repository.RoleRepository;
 import com.mediclinic.appointment_scheduler.repository.UserRepository;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+            RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public User handleGetUserByUsername(String username) {
@@ -28,18 +35,21 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    public User handleCreateUser(User user) {
-        return this.userRepository.save(user);
+    public ResUserDTO handleCreateUser(User user) {
+
+        if (user.getRole() != null) {
+            user.setRole(this.roleRepository.findById(user.getRole().getId()).orElse(null));
+        }
+        User userDB = this.userRepository.save(user);
+        return ResUserDTO.mapEntityUserToDTO(userDB);
     }
 
-    public User deleteUser(long id) {
+    public void deleteUser(long id) {
         Optional<User> userOp = this.userRepository.findById(id);
         if (userOp.isPresent()) {
             User user = userOp.get();
             this.userRepository.deleteById(id);
-            return user;
         }
-        return null;
     }
 
     public User fetchUserById(long id) {
@@ -47,29 +57,35 @@ public class UserService {
     }
 
     public ResPaginationDTO fetchAllUser(Pageable pageable, Specification<User> spec) {
-        ResPaginationDTO res = new ResPaginationDTO();
-        ResPaginationDTO.Meta meta = new ResPaginationDTO.Meta();
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
-        meta.setPage(pageable.getPageNumber() + 1);
-        meta.setPageSize(pageable.getPageSize());
-        meta.setPages(pageUser.getTotalPages());
-        meta.setTotal(pageUser.getTotalElements());
-        res.setMeta(meta);
-        res.setResult(pageUser.getContent());
-        return res;
+        ResPaginationDTO.Meta mt = new ResPaginationDTO.Meta();
+        ResPaginationDTO rp = new ResPaginationDTO();
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageable.getPageSize());
+        mt.setPages(pageUser.getTotalPages());
+        mt.setTotal(pageUser.getTotalElements());
+        rp.setMeta(mt);
+        List<ResUserDTO> list = pageUser.getContent()
+                .stream()
+                .map(item -> ResUserDTO.mapEntityUserToDTO(item))
+                .collect(Collectors.toList());
+        rp.setResult(list);
+        return rp;
     }
 
-    public User updateUser(User user) {
+    public ResUserDTO updateUser(User user) {
         User userUD = this.fetchUserById(user.getId());
         if (userUD != null) {
             userUD.setName(user.getName());
             userUD.setGender(user.getGender());
             userUD.setAge(user.getAge());
             userUD.setAddress(user.getAddress());
-            userUD.setPhone(user.getPhone());
             userUD = this.userRepository.save(userUD);
+            if (user.getRole() != null) {
+                userUD.setRole(this.roleRepository.findById(user.getRole().getId()).orElse(null));
+            }
         }
-        return userUD;
+        return ResUserDTO.mapEntityUserToDTO(userUD);
     }
 
     public void updateUserToken(String token, String email) {

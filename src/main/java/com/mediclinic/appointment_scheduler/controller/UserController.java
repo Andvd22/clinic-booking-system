@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mediclinic.appointment_scheduler.domain.User;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
+import com.mediclinic.appointment_scheduler.domain.response.user.ResUserDTO;
 import com.mediclinic.appointment_scheduler.service.UserService;
 import com.mediclinic.appointment_scheduler.util.annotation.ApiMessage;
 import com.mediclinic.appointment_scheduler.util.error.IdInvalidException;
@@ -44,7 +45,7 @@ public class UserController {
     // @GetMapping("/users/create")
     @PostMapping("/users")
     @ApiMessage("Create a new user")
-    public ResponseEntity<User> createNewUser(
+    public ResponseEntity<?> createNewUser(
             @Valid @RequestBody User postManUser) throws IdInvalidException {
         boolean isEmailExist = this.userService.isEmailExist(postManUser.getEmail());
         if (isEmailExist) {
@@ -53,21 +54,21 @@ public class UserController {
         }
         String hashPashword = this.passwordEncoder.encode(postManUser.getPassword());
         postManUser.setPassword(hashPashword);
-        User bbuser = this.userService.handleCreateUser(postManUser);
+        ResUserDTO bbuser = this.userService.handleCreateUser(postManUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(bbuser);
     }
 
     @DeleteMapping("/users/{xoatheoid}")
     @ApiMessage("Delete user")
-    public ResponseEntity<User> deleteUser(
+    public ResponseEntity<?> deleteUser(
             @PathVariable("xoatheoid") long andeptrai) throws IdInvalidException {
         User currentUser = this.userService.fetchUserById(andeptrai);
         if (currentUser == null) {
             throw new IdInvalidException("User với id " + andeptrai + " không tồn tại");
         }
-        User bbuser = this.userService.deleteUser(andeptrai);
+        this.userService.deleteUser(andeptrai);
         // return ResponseEntity.ok(bbuser);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(bbuser);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @GetMapping("/users/{idofuser}")
@@ -87,8 +88,8 @@ public class UserController {
 
     @PutMapping("/users")
     @ApiMessage("update user")
-    public ResponseEntity<User> updateUser(@RequestBody User postManUDUser) {
-        User bbuser = this.userService.updateUser(postManUDUser);
+    public ResponseEntity<?> updateUser(@RequestBody User postManUDUser) {
+        ResUserDTO bbuser = this.userService.updateUser(postManUDUser);
         return ResponseEntity.status(HttpStatus.OK).body(bbuser);
     }
 
