@@ -19,4 +19,6 @@ public interface DoctorService {
     ResDoctorDTO fetchDoctorById(Long id);
 
     ResPaginationDTO fetchAllDoctors(Pageable pageable, Specification<Doctor> specification);
+
+    List<Doctor> searchByFullNameOrSpecialty(String keyword);
 }

@@ -10,6 +10,9 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
+import com.mediclinic.appointment_scheduler.domain.response.doctor.ResDoctorDTO;
 
 @RestController
 @RequestMapping("/api/v1/doctors")
@@ -61,4 +65,11 @@ public class DoctorController {
         return ResponseEntity.ok().body(this.doctorService.fetchAllDoctors(pageable, spec));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchDoctors(@RequestParam("q") String query) {
+        List<Doctor> doctors = this.doctorService.searchByFullNameOrSpecialty(query);
+        List<ResDoctorDTO> res = doctors.stream().map(doctor -> ResDoctorDTO.mapEntityDoctorToDTO(doctor))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(res);
+    }
 }

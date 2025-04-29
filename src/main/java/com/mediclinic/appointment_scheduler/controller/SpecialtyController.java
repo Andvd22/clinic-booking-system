@@ -60,7 +60,7 @@ public class SpecialtyController {
     }
 
     @GetMapping()
-    @ApiMessage("Lấy chuyên khoa thành công")
+    @ApiMessage("Lấy all chuyên khoa thành công")
     public ResponseEntity<?> fetchAllSchedules(Pageable pageable, @Filter Specification<Specialty> spec) {
         return ResponseEntity.ok().body(this.specialtyService.fetchAllSpecialty(pageable, spec));
     }

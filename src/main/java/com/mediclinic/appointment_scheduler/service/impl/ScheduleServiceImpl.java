@@ -14,6 +14,7 @@ import com.mediclinic.appointment_scheduler.domain.Doctor;
 import com.mediclinic.appointment_scheduler.domain.Schedule;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.domain.response.schedule.ResScheduleDTO;
+import com.mediclinic.appointment_scheduler.repository.AppointmentRepository;
 import com.mediclinic.appointment_scheduler.repository.DoctorRepository;
 import com.mediclinic.appointment_scheduler.repository.ScheduleRepository;
 import com.mediclinic.appointment_scheduler.service.ScheduleService;
@@ -25,10 +26,13 @@ import com.mediclinic.appointment_scheduler.util.error.ResourceNotFoundException
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final DoctorRepository doctorRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, DoctorRepository doctorRepository) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, DoctorRepository doctorRepository,
+            AppointmentRepository appointmentRepository) {
         this.scheduleRepository = scheduleRepository;
         this.doctorRepository = doctorRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResourceAlreadyExistsException("Lịch đã tồn tại");
 
         schedulePM.setDoctor(this.doctorRepository.findById(schedulePM.getDoctor().getId()).orElse(null));
+
         Schedule scheduleDB = this.scheduleRepository.save(schedulePM);
         return ResScheduleDTO.mapEntityScheduleToDTO(scheduleDB);
     }

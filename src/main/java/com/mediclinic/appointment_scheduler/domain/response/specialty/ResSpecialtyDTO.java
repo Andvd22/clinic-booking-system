@@ -21,6 +21,7 @@ public class ResSpecialtyDTO {
     private Long id;
     private String name;
     private String description;
+    private String imageUrl;
     private List<SpecialtyDoctor> doctors;
 
     @Getter
@@ -37,6 +38,7 @@ public class ResSpecialtyDTO {
                 s.getId(),
                 s.getName(),
                 s.getDescription(),
+                s.getImageUrl(),
                 s.getDoctors() != null ? s.getDoctors().stream()
                         .map(doctor -> new SpecialtyDoctor(doctor.getId(), doctor.getFullName()))
                         .collect(Collectors.toList())

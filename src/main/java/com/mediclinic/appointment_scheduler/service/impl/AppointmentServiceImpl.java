@@ -17,6 +17,7 @@ import com.mediclinic.appointment_scheduler.repository.ScheduleRepository;
 import com.mediclinic.appointment_scheduler.repository.UserRepository;
 import com.mediclinic.appointment_scheduler.service.AppointmentService;
 import com.mediclinic.appointment_scheduler.util.constant.AppointmentStatusEnum;
+import com.mediclinic.appointment_scheduler.util.constant.ScheduleStatusEnum;
 import com.mediclinic.appointment_scheduler.util.error.IdInvalidException;
 
 @Service
@@ -51,6 +52,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         User user = this.userRepository.findById(appointment.getDoctor().getId())
                 .orElseThrow(() -> new IdInvalidException("không tồn tại người dùng với id này"));
 
+        scheduleDB.setStatus(ScheduleStatusEnum.BOOKED);
         appointment.setDoctor(doctor);
         appointment.setUser(user);
         appointment.setSchedule(scheduleDB);

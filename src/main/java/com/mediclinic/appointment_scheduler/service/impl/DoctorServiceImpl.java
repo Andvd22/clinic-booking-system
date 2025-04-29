@@ -97,4 +97,9 @@ public class DoctorServiceImpl implements DoctorService {
         res.setResult(resDoctorDTOs);
         return res;
     }
+
+    @Override
+    public List<Doctor> searchByFullNameOrSpecialty(String keyword) {
+        return doctorRepository.searchByFullNameOrSpecialty(keyword);
+    }
 }
