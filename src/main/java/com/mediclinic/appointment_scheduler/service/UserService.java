@@ -37,9 +37,8 @@ public class UserService {
 
     public ResUserDTO handleCreateUser(User user) {
 
-        if (user.getRole() != null) {
-            user.setRole(this.roleRepository.findById(user.getRole().getId()).orElse(null));
-        }
+        user.setRole(this.roleRepository.findById(user.getRole().getId()).orElse(null));
+
         User userDB = this.userRepository.save(user);
         return ResUserDTO.mapEntityUserToDTO(userDB);
     }
@@ -52,8 +51,8 @@ public class UserService {
         }
     }
 
-    public User fetchUserById(long id) {
-        return this.userRepository.findById(id).orElse(null);
+    public ResUserDTO fetchUserById(long id) {
+        return ResUserDTO.mapEntityUserToDTO(this.userRepository.findById(id).orElse(null));
     }
 
     public ResPaginationDTO fetchAllUser(Pageable pageable, Specification<User> spec) {
@@ -74,7 +73,7 @@ public class UserService {
     }
 
     public ResUserDTO updateUser(User user) {
-        User userUD = this.fetchUserById(user.getId());
+        User userUD = this.userRepository.findById(user.getId()).orElse(null);
         if (userUD != null) {
             userUD.setName(user.getName());
             userUD.setGender(user.getGender());

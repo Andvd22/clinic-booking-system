@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mediclinic.appointment_scheduler.domain.User;
 import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.domain.response.user.ResUserDTO;
+import com.mediclinic.appointment_scheduler.repository.UserRepository;
 import com.mediclinic.appointment_scheduler.service.UserService;
 import com.mediclinic.appointment_scheduler.util.annotation.ApiMessage;
 import com.mediclinic.appointment_scheduler.util.error.IdInvalidException;
@@ -36,10 +37,12 @@ public class UserController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     // @GetMapping("/users/create")
@@ -62,7 +65,7 @@ public class UserController {
     @ApiMessage("Delete user")
     public ResponseEntity<?> deleteUser(
             @PathVariable("xoatheoid") long andeptrai) throws IdInvalidException {
-        User currentUser = this.userService.fetchUserById(andeptrai);
+        User currentUser = this.userRepository.findById(andeptrai).orElse(null);
         if (currentUser == null) {
             throw new IdInvalidException("User với id " + andeptrai + " không tồn tại");
         }
@@ -73,9 +76,9 @@ public class UserController {
 
     @GetMapping("/users/{idofuser}")
     @ApiMessage("Fetch user by id")
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<?> getUserById(
             @PathVariable("idofuser") long id) {
-        User bbuser = this.userService.fetchUserById(id);
+        ResUserDTO bbuser = this.userService.fetchUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(bbuser);
     }
 

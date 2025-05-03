@@ -25,4 +25,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     boolean existsBySchedule(Schedule schedule);
 
+    Optional<Appointment> findByUserIdAndDoctorIdAndScheduleId(Long userId, Long doctorId, Long scheduleId);
 }

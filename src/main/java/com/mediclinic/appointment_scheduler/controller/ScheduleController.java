@@ -22,6 +22,8 @@ import com.mediclinic.appointment_scheduler.domain.response.ResPaginationDTO;
 import com.mediclinic.appointment_scheduler.domain.response.schedule.ResScheduleDTO;
 import com.mediclinic.appointment_scheduler.service.ScheduleService;
 import com.mediclinic.appointment_scheduler.util.annotation.ApiMessage;
+import com.mediclinic.appointment_scheduler.util.constant.AppointmentStatusEnum;
+import com.mediclinic.appointment_scheduler.util.constant.ScheduleStatusEnum;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
@@ -73,4 +75,5 @@ public class ScheduleController {
         ResPaginationDTO res = this.scheduleService.fetchSchedulesByDoctorAndDate(doctorId, workDate, pageable);
         return ResponseEntity.ok(res);
     }
+
 }

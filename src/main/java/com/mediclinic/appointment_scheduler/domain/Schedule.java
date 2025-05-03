@@ -46,7 +46,7 @@ public class Schedule {
     private String timeSlot;
 
     @Enumerated(EnumType.STRING)
-    private ScheduleStatusEnum status = ScheduleStatusEnum.AVAILABLE;
+    private ScheduleStatusEnum status;
 
     @OneToOne(mappedBy = "schedule")
     @JsonIgnore

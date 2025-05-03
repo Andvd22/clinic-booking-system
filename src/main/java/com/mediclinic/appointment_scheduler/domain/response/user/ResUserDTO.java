@@ -36,7 +36,9 @@ public class ResUserDTO {
 
     public static ResUserDTO mapEntityUserToDTO(User user) {
         return new ResUserDTO(user.getId(), user.getEmail(), user.getName(), user.getGender(), user.getAddress(),
-                user.getAge(), user.getCreatedAt(), new RoleUser(user.getRole().getId(), user.getRole().getName()));
+                user.getAge(), user.getCreatedAt(),
+                user.getRole() != null ? new RoleUser(user.getRole().getId(), user.getRole().getName())
+                        : new RoleUser());
     }
 
 }

@@ -61,7 +61,7 @@ public class DoctorController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> detchAllDoctor(Pageable pageable, @Filter Specification<Doctor> spec) {
+    public ResponseEntity<?> fetchAllDoctor(Pageable pageable, @Filter Specification<Doctor> spec) {
         return ResponseEntity.ok().body(this.doctorService.fetchAllDoctors(pageable, spec));
     }
 
